@@ -54,7 +54,7 @@ public class Matrix {
 		this.rows = rows;
 		this.cols = cols;
 		this.data = new Double[rows][cols];
-		this.randomize();
+		this.randomize(0);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class Matrix {
 	 *
 	 * @throws Error throws an error if the matrix rows and colon count are not equal
 	 */
-	public void generateIdentity() throws Error {
+	public void generateIdentity() throws Exception {
 		if (this.rows == this.cols) {
 			for (int i = 0; i < this.data.length; i++) {
 				for (int j = 0; j < this.data[i].length; j++) {
@@ -111,7 +111,7 @@ public class Matrix {
 				}
 			}
 		} else {
-			throw new Error("Cannot build an identity matrix if rows and colonnes are not equal");
+			throw new Exception("Cannot build an identity matrix if rows and colonnes are not equal");
 		}
 	}
 
@@ -121,11 +121,11 @@ public class Matrix {
 	 * @return Returns the determinant of a 2x2 Matrix
 	 * @throws Error throws an error if the matrix is not 2 by 2
 	 */
-	public double determinant2D() throws Error {
+	public double determinant2D() throws Exception {
 		if (this.isSquare()) {
 			return this.data[0][0] * this.data[1][1] - this.data[0][1] * this.data[1][0];
 		} else {
-			throw new Error("Cannot return the determiant of a non 2x2 matrix.");
+			throw new Exception("Cannot return the determiant of a non 2x2 matrix.");
 		}
 	}
 
@@ -135,7 +135,7 @@ public class Matrix {
 	 * @return Returns the determinant of a n by n Matrix
 	 * @throws Error throws an error if the matrix is not squared (rows == colons)
 	 */
-	public double determinant() throws Error {
+	public double determinant() throws Exception {
 
 		if (this.isSquare()) {
 
@@ -163,7 +163,7 @@ public class Matrix {
 			return sum;
 
 		} else {
-			throw new Error("Cannot compute the determinant of a non square matrix");
+			throw new Exception("Cannot compute the determinant of a non square matrix");
 		}
 	}
 
@@ -200,7 +200,7 @@ public class Matrix {
 	 * @param other The matrix you want to add with the calling matrix
 	 * @return Returns the sum result of calling Matrix + other Matrix
 	 */
-	public Matrix add(final Matrix other) throws Error {
+	public Matrix add(final Matrix other) throws Exception {
 
 		if (this.rows == other.rows && this.cols == other.cols) {
 			Matrix result = new Matrix(this.rows, this.cols);
@@ -214,7 +214,7 @@ public class Matrix {
 			return result;
 
 		} else {
-			throw new Error("Cannot add 2 Matrix with diffrent rows and colonnes count.");
+			throw new Exception("Cannot add 2 Matrix with diffrent rows and colonnes count.");
 		}
 
 	}
@@ -243,7 +243,7 @@ public class Matrix {
 	 * @param other The matrix you want to multiply with the calling matrix
 	 * @return Returns the multiplying result of calling Matrix * other Matrix
 	 */
-	public Matrix multiply(final Matrix other) throws Error {
+	public Matrix multiply(final Matrix other) throws Exception {
 
 		if (this.cols == other.getRows() && this.rows == other.getCols()) {
 			Matrix result = new Matrix(this.rows, other.cols);
@@ -260,7 +260,7 @@ public class Matrix {
 
 			return result;
 		} else {
-			throw new Error("Cannot multiply matrices where Acols != Brows && Arows != Bcols");
+			throw new Exception("Cannot multiply matrices where Acols != Brows && Arows != Bcols");
 		}
 	}
 
@@ -284,7 +284,7 @@ public class Matrix {
 	 * @return Returns the multiplying result of calling Matrix with it self <i>n</i> times
 	 * @throws Error throws an error if the calling matrix is not 2 by 2
 	 */
-	public Matrix power(int exponent) throws Error {
+	public Matrix power(int exponent) throws Exception {
 		if (this.isSquare()) {
 			Matrix result = new Matrix(this);
 
@@ -294,7 +294,7 @@ public class Matrix {
 
 			return result;
 		} else {
-			throw new Error("Cannot compute the power of " + exponent + " a non square matrix.");
+			throw new Exception("Cannot compute the power of " + exponent + " a non square matrix.");
 		}
 	}
 
@@ -304,9 +304,9 @@ public class Matrix {
 	 * @return Returns the inverse of the calling matrix
 	 * @throws Error throws an error because the function hasn't been coded yet
 	 */
-	public Matrix inverse() throws Error {
+	public Matrix inverse() throws Exception {
 
-		throw new Error("ERROR!!!!!!!");
+		throw new Exception("ERROR!!!!!!!");
 		/*if (this.is2D())	{
 			double temp = 1 / this.determinant2D();
 			this.data[0][1] = -1.0 * this.data[0][1];
@@ -404,7 +404,7 @@ public class Matrix {
 	 * @return Returns the resulting Vector
 	 * @throws Error Throws an error if Matrix colons > 1 OR if Matrix rows > 3
 	 */
-	public Vector toVector() throws Error {
+	public Vector toVector() throws Exception {
 		if (this.cols == 1) {
 			if (this.rows == 1) {
 				return new Vector(this.getData(0, 0), 0);
@@ -416,7 +416,7 @@ public class Matrix {
 				throw new Error("Cannot convert a Matrix with more than 3 rows to a Vector");
 			}
 		} else {
-			throw new Error("Cannot convert a Matrix with more than 1 colon to a Vector");
+			throw new Exception("Cannot convert a Matrix with more than 1 colon to a Vector");
 		}
 	}
 

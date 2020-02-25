@@ -165,8 +165,9 @@ public class Vector implements Cloneable {
 	 * @return Returns the vector diffrence of the calling vector - other
 	 */
 	public Vector substract(final Vector other) {
-		other.inverse();
-		return this.add(other);
+		Vector temp = new Vector(other);
+		temp.inverse();
+		return this.add(temp);
 	}
 
 	/**
@@ -188,7 +189,7 @@ public class Vector implements Cloneable {
 	 * @return Returns a vector representing the cross product between the calling
 	 *         vector and b
 	 */
-	public Vector crossProduct(final Vector b) {
+	public Vector crossProduct(final Vector b) throws Exception {
 		Matrix i = new Matrix(2, 2);
 		i.setData(0, 0, y);
 		i.setData(0, 1, z);
@@ -218,7 +219,7 @@ public class Vector implements Cloneable {
 	 *
 	 * @return Returns the result matrix of the multiplication
 	 */
-	public Matrix multiply(final Matrix matrix) {
+	public Matrix multiply(final Matrix matrix) throws Exception {
 		Matrix vec = this.toMatrix();
 		return vec.multiply(matrix);
 	}
