@@ -31,8 +31,9 @@ public class Main extends Application {
 	private final static Matrix projectionMatrix = new Matrix(4, 4);
 	private static double angleZ = 0.0;
 	private static double angleX = 0.0;
+	public static double furthest_point = 1000.0;
 
-	private static Vector camera = new Vector(0, 0, 0);        // Position of the camera
+	public static Vector camera = new Vector(0, 0, 0);        // Position of the camera
 
 	//==================== Cube mesh==================
 	private final static Mesh cube = Mesh.loadFromObj("src/DataFiles/teapot.obj");
@@ -62,9 +63,8 @@ public class Main extends Application {
 		// Init projection matrix
 		double fNear = 0.1;
 		double fFar = 1000.0;
-		double fFov = 90.0;
 		double fAspectRatio = canvas.getHeight() / canvas.getWidth();
-		double fFovRad = 1.0 / Math.tan(fFov * 0.5 / 180.0 * Math.PI);
+		double fFovRad = 1.0 / Math.tan(furthest_point * 0.5 / 180.0 * Math.PI);
 
 		projectionMatrix.setData(0, 0, fAspectRatio * fFovRad);
 		projectionMatrix.setData(1, 1, fFovRad);
@@ -181,13 +181,10 @@ public class Main extends Application {
 
 		for (var tri : triangles_to_draw) {
 
-			// Illumination
-			Vector light_direction = new Vector(0.0, 0.0, -1.0);
-			light_direction.normalize();
-
+			// TODO: Illumination
 
 			// Draw the triangle with the appropiate color
-			tri.draw(g);
+			tri.noFill().draw(g);
 		}
 	}
 

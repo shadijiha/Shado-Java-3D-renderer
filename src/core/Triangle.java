@@ -6,7 +6,9 @@ package core;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import renderer.Main;
 import shadoMath.Vector;
+import shadoMath.Vertex;
 
 public class Triangle {
 
@@ -17,6 +19,8 @@ public class Triangle {
 
 	private boolean show_stroke = true;
 	private boolean show_fill = true;
+
+	private int z_buffer;
 
 	// Constructors
 	public Triangle(Vector v1, Vector v2, Vector v3) {
@@ -58,6 +62,28 @@ public class Triangle {
 //		new Shado.Line(vectors[2].x, vectors[2].y, vectors[0].x, vectors[0].y).setFill(c).setStroke(c).draw(g);
 	}
 
+	public void shade() {
+
+		Vertex v1 = Main.camera.toVertex();
+		Vertex v2 = this.midPoint().toVertex();
+
+		int xd = (int) v1.getDistance(v2);
+
+		int mapped_value = map(xd,
+				0, 1000,
+				0, 255);
+
+		mapped_value = Math.abs(mapped_value - 255);
+
+		Color shadder = Color.rgb(mapped_value, mapped_value, mapped_value);
+		this.setFill(shadder);
+		this.setStroke(shadder);
+	}
+
+	private int map(int x, int in_min, int in_max, int out_min, int out_max) {
+		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	}
+
 	// Setters
 	public Triangle setStroke(Color c) {
 		stroke_color = c;
@@ -76,6 +102,11 @@ public class Triangle {
 
 	public Triangle noFill() {
 		show_fill = false;
+		return this;
+	}
+
+	public Triangle setZBuffer(int number) {
+		z_buffer = number;
 		return this;
 	}
 
@@ -105,5 +136,19 @@ public class Triangle {
 //		normal.z = line1.x * line2.y - line1.y * line2.x;
 
 		return normal;
+	}
+
+	public int getZBuffer() {
+		return z_buffer;
+	}
+
+	public double depth() {
+		return (vectors[0].z + vectors[1].z + vectors[2].z) / 3.0;
+	}
+
+	private Vector midPoint() {
+		return new Vector((vectors[0].x + vectors[1].x + vectors[2].x) / 3.0,
+				(vectors[0].y + vectors[1].y + vectors[2].y) / 3.0,
+				(vectors[0].z + vectors[1].z + vectors[2].z) / 3.0);
 	}
 }

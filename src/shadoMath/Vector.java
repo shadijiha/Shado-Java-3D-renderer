@@ -276,6 +276,10 @@ public class Vector implements Cloneable {
 		return new Complex(this.x, this.y);
 	}
 
+	public Vertex toVertex() {
+		return new Vertex(this.x, this.y, this.z);
+	}
+
 	// Overridden java.lang.Object
 	public boolean equals(Object o) {
 		if (o == null || o.getClass() != getClass()) {
