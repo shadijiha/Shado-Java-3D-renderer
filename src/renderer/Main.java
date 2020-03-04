@@ -2,6 +2,9 @@ package renderer;
 
 import core.Mesh;
 import core.Triangle;
+import core.coloring.CHAR_INFO;
+import core.coloring.COLORS;
+import core.coloring.PIXEL_TYPE;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -200,17 +203,116 @@ public class Main extends Application {
 
 		Mesh result = new Mesh();
 
-		result.add(new Triangle(0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0));
-		result.add(new Triangle(0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0));
-		result.add(new Triangle(1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0));
-		result.add(new Triangle(1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0));
-		result.add(new Triangle(1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0));
-		result.add(new Triangle(1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0));
-		result.add(new Triangle(0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0));
-		result.add(new Triangle(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0));
-		result.add(new Triangle(1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0));
-		result.add(new Triangle(1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0));
+		// SOUTH
+		result.add(new Triangle(new Vector(0.0f, 0.0f, 0.0f), new Vector(0.0f, 1.0f, 0.0f), new Vector(1.0f, 1.0f, 0.0f)));
+		result.add(new Triangle(new Vector(0.0f, 0.0f, 0.0f), new Vector(1.0f, 1.0f, 0.0f), new Vector(1.0f, 0.0f, 0.0f)));
+
+		// EAST
+		result.add(new Triangle(new Vector(1.0f, 0.0f, 0.0f), new Vector(1.0f, 1.0f, 0.0f), new Vector(1.0f, 1.0f, 1.0f)));
+		result.add(new Triangle(new Vector(1.0f, 0.0f, 0.0f), new Vector(1.0f, 1.0f, 1.0f), new Vector(1.0f, 0.0f, 1.0f)));
+
+		// NORTH
+		result.add(new Triangle(new Vector(1.0f, 0.0f, 1.0f), new Vector(1.0f, 1.0f, 1.0f), new Vector(0.0f, 1.0f, 1.0f)));
+		result.add(new Triangle(new Vector(1.0f, 0.0f, 1.0f), new Vector(0.0f, 1.0f, 1.0f), new Vector(0.0f, 0.0f, 1.0f)));
+
+		// WEST
+		result.add(new Triangle(new Vector(0.0f, 0.0f, 1.0f), new Vector(0.0f, 1.0f, 1.0f), new Vector(0.0f, 1.0f, 0.0f)));
+		result.add(new Triangle(new Vector(0.0f, 0.0f, 1.0f), new Vector(0.0f, 1.0f, 0.0f), new Vector(0.0f, 0.0f, 0.0f)));
+
+		// TOP
+		result.add(new Triangle(new Vector(0.0f, 1.0f, 0.0f), new Vector(0.0f, 1.0f, 1.0f), new Vector(1.0f, 1.0f, 1.0f)));
+		result.add(new Triangle(new Vector(0.0f, 1.0f, 0.0f), new Vector(1.0f, 1.0f, 1.0f), new Vector(1.0f, 1.0f, 0.0f)));
+
+		// BOTTOM
+		result.add(new Triangle(new Vector(1.0f, 0.0f, 1.0f), new Vector(0.0f, 0.0f, 1.0f), new Vector(0.0f, 0.0f, 0.0f)));
+		result.add(new Triangle(new Vector(1.0f, 0.0f, 1.0f), new Vector(0.0f, 0.0f, 0.0f), new Vector(1.0f, 0.0f, 0.0f)));
+
 
 		return result;
+	}
+
+	private static CHAR_INFO getColor(float lum) {
+		long bg_col, fg_col;
+		char sym;
+		int pixel_bw = (int) (13.0 * lum);
+		switch (pixel_bw) {
+			case 0:
+				bg_col = COLORS.BG_BLACK.color();
+				fg_col = COLORS.FG_BLACK.color();
+				sym = PIXEL_TYPE.PIXEL_SOLID.type();
+				break;
+
+			case 1:
+				bg_col = COLORS.BG_BLACK.color();
+				fg_col = COLORS.FG_DARK_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_QUARTER.type();
+				break;
+			case 2:
+				bg_col = COLORS.BG_BLACK.color();
+				fg_col = COLORS.FG_DARK_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_HALF.type();
+				break;
+			case 3:
+				bg_col = COLORS.BG_BLACK.color();
+				fg_col = COLORS.FG_DARK_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_THREEQUARTERS.type();
+				break;
+			case 4:
+				bg_col = COLORS.BG_BLACK.color();
+				fg_col = COLORS.FG_DARK_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_SOLID.type();
+				break;
+
+			case 5:
+				bg_col = COLORS.BG_DARK_GREY.color();
+				fg_col = COLORS.FG_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_QUARTER.type();
+				break;
+			case 6:
+				bg_col = COLORS.BG_DARK_GREY.color();
+				fg_col = COLORS.FG_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_HALF.type();
+				break;
+			case 7:
+				bg_col = COLORS.BG_DARK_GREY.color();
+				fg_col = COLORS.FG_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_THREEQUARTERS.type();
+				break;
+			case 8:
+				bg_col = COLORS.BG_DARK_GREY.color();
+				fg_col = COLORS.FG_GREY.color();
+				sym = PIXEL_TYPE.PIXEL_SOLID.type();
+				break;
+
+			case 9:
+				bg_col = COLORS.BG_GREY.color();
+				fg_col = COLORS.FG_WHITE.color();
+				sym = PIXEL_TYPE.PIXEL_QUARTER.type();
+				break;
+			case 10:
+				bg_col = COLORS.BG_GREY.color();
+				fg_col = COLORS.FG_WHITE.color();
+				sym = PIXEL_TYPE.PIXEL_HALF.type();
+				break;
+			case 11:
+				bg_col = COLORS.BG_GREY.color();
+				fg_col = COLORS.FG_WHITE.color();
+				sym = PIXEL_TYPE.PIXEL_THREEQUARTERS.type();
+				break;
+			case 12:
+				bg_col = COLORS.BG_GREY.color();
+				fg_col = COLORS.FG_WHITE.color();
+				sym = PIXEL_TYPE.PIXEL_SOLID.type();
+				break;
+			default:
+				bg_col = COLORS.BG_BLACK.color();
+				fg_col = COLORS.FG_BLACK.color();
+				sym = PIXEL_TYPE.PIXEL_SOLID.type();
+		}
+
+		CHAR_INFO c = new CHAR_INFO();
+		c.Attributes = (short) (bg_col | fg_col);
+		c.UnicodeChar = sym;
+		return c;
 	}
 }
