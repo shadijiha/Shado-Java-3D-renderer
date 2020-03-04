@@ -7,12 +7,18 @@ package core;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import shadoMath.Vector;
-import shapes.Shado;
 
 public class Triangle {
 
 	public Vector[] vectors;
 
+	private Color stroke_color = Color.WHITE;
+	private Color fill_color = Color.WHITE;
+
+	private boolean show_stroke = true;
+	private boolean show_fill = true;
+
+	// Constructors
 	public Triangle(Vector v1, Vector v2, Vector v3) {
 		vectors = new Vector[3];
 		vectors[0] = v1;
@@ -32,14 +38,48 @@ public class Triangle {
 		this(new Vector(other.vectors[0]), new Vector(other.vectors[1]), new Vector(other.vectors[2]));
 	}
 
-	public void draw(GraphicsContext g, Color c) {
+	// Core
+	public void draw(GraphicsContext g) {
 
-		new Shado.Line(vectors[0].x, vectors[0].y, vectors[1].x, vectors[1].y).setFill(c).setStroke(c).draw(g);
-		new Shado.Line(vectors[1].x, vectors[1].y, vectors[2].x, vectors[2].y).setFill(c).setStroke(c).draw(g);
-		new Shado.Line(vectors[2].x, vectors[2].y, vectors[0].x, vectors[0].y).setFill(c).setStroke(c).draw(g);
+		if (show_stroke) {
+			g.setStroke(stroke_color);
+			g.strokePolygon(new double[]{vectors[0].x, vectors[1].x, vectors[2].x},
+					new double[]{vectors[0].y, vectors[1].y, vectors[2].y}, 3);
+		}
 
+		if (show_fill) {
+			g.setFill(fill_color);
+			g.fillPolygon(new double[]{vectors[0].x, vectors[1].x, vectors[2].x},
+					new double[]{vectors[0].y, vectors[1].y, vectors[2].y}, 3);
+		}
+
+//		new Shado.Line(vectors[0].x, vectors[0].y, vectors[1].x, vectors[1].y).setFill(c).setStroke(c).draw(g);
+//		new Shado.Line(vectors[1].x, vectors[1].y, vectors[2].x, vectors[2].y).setFill(c).setStroke(c).draw(g);
+//		new Shado.Line(vectors[2].x, vectors[2].y, vectors[0].x, vectors[0].y).setFill(c).setStroke(c).draw(g);
 	}
 
+	// Setters
+	public Triangle setStroke(Color c) {
+		stroke_color = c;
+		return this;
+	}
+
+	public Triangle setFill(Color c) {
+		fill_color = c;
+		return this;
+	}
+
+	public Triangle noStroke() {
+		show_stroke = false;
+		return this;
+	}
+
+	public Triangle noFill() {
+		show_fill = false;
+		return this;
+	}
+
+	// Getters
 	public Vector getNormal() {
 
 		Vector normal = new Vector();

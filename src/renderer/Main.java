@@ -19,6 +19,8 @@ import shadoMath.Vector;
 import shapes.Shado;
 import shapes.Timer;
 
+import java.util.ArrayList;
+
 public class Main extends Application {
 
 	public static final Logger LOGGER = new Logger(false);
@@ -33,7 +35,7 @@ public class Main extends Application {
 	private static Vector camera = new Vector(0, 0, 0);        // Position of the camera
 
 	//==================== Cube mesh==================
-	private final static Mesh cube = generateCubeMesh();
+	private final static Mesh cube = Mesh.loadFromObj("src/DataFiles/teapot.obj");
 
 	public static void main(String[] args) {
 		launch(args);
@@ -120,6 +122,8 @@ public class Main extends Application {
 		Matrix rotationZ = Matrix.rotationZ(angleZ);
 		Matrix rotationX = Matrix.rotationX(angleX);
 
+		ArrayList<Triangle> triangles_to_draw = new ArrayList<>();
+
 		// Draw triangles
 		for (var tri : cube.tris) {
 
@@ -140,7 +144,7 @@ public class Main extends Application {
 			// Translate the triangle
 			Triangle triTranslated = new Triangle(triRotatedZX);
 			for (Vector v : triTranslated.vectors) {
-				v.z += 3.0;
+				v.z += 8.0;
 			}
 
 			Vector normal = triTranslated.getNormal();
@@ -161,13 +165,39 @@ public class Main extends Application {
 					v.x *= 0.5 * c.getWidth();
 					v.y *= 0.5 * c.getHeight();
 				}
-
-				triProjected.draw(g, Color.WHITE);
+				// Add to the Triangle to draw list
+				triangles_to_draw.add(triProjected);
 			}
+		}
 
+		// Sort the triangles from back to front
+		triangles_to_draw.sort((Triangle a, Triangle b) -> {
+
+			double mid_point_1 = (a.vectors[0].z + a.vectors[1].z + a.vectors[2].z) / 3.0;
+			double mid_point_2 = (b.vectors[0].z + b.vectors[1].z + b.vectors[2].z) / 3.0;
+
+			return (int) (mid_point_1 - mid_point_2);
+		});
+
+		for (var tri : triangles_to_draw) {
+
+			// Illumination
+			Vector light_direction = new Vector(0.0, 0.0, -1.0);
+			light_direction.normalize();
+
+
+			// Draw the triangle with the appropiate color
+			tri.draw(g);
 		}
 	}
 
+	/**
+	 * This function multiplies a 4x4 Matrix with a vector
+	 *
+	 * @param i The vector the multiply with
+	 * @param m The matrix to multiply
+	 * @return Returns a vector with the result of the multiplication
+	 */
 	public static Vector multiplyMatrixVector(Vector i, Matrix m) {
 
 		if (m.getRows() == 3 && m.getCols() == 3) {
@@ -199,6 +229,11 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * This function generates a Cube using the mesh and triangle classes
+	 *
+	 * @return
+	 */
 	private static Mesh generateCubeMesh() {
 
 		Mesh result = new Mesh();
@@ -231,7 +266,14 @@ public class Main extends Application {
 		return result;
 	}
 
-	private static CHAR_INFO getColor(float lum) {
+	/**
+	 * This function returns an appropriate color depending on
+	 * how close the position to the camera
+	 *
+	 * @param lum
+	 * @return
+	 */
+	private static CHAR_INFO getColor(double lum) {
 		long bg_col, fg_col;
 		char sym;
 		int pixel_bw = (int) (13.0 * lum);
