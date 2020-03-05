@@ -49,13 +49,14 @@ public class Main extends Application {
 
 		// Create object
 		Object3D obj = Object3D.loadOBJ("src/DataFiles/teapot.obj");
+		Object3D obj2 = Object3D.loadOBJ("src/DataFiles/VideoShip.obj");
 
 		new AnimationTimer() {
 			public void handle(long now) {
 
 				renderer.clear();
 
-				renderer.add(obj);
+				renderer.add(obj2);
 
 				// Render stuff
 				renderer.render();

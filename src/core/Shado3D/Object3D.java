@@ -109,7 +109,7 @@ public class Object3D {
 	 * @param lum
 	 * @return
 	 */
-	private static CHAR_INFO getColor(double lum) {
+	public static CHAR_INFO getColor(double lum) {
 		long bg_col, fg_col;
 		char sym;
 		int pixel_bw = (int) (13.0 * lum);

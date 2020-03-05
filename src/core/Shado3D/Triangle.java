@@ -18,7 +18,7 @@ public class Triangle {
 	private boolean show_stroke = true;
 	private boolean show_fill = true;
 
-	private int z_buffer;
+	private double z_buffer;
 
 	// Constructors
 	public Triangle(Vector v1, Vector v2, Vector v3) {
@@ -60,6 +60,21 @@ public class Triangle {
 //		new Shado.Line(vectors[2].x, vectors[2].y, vectors[0].x, vectors[0].y).setFill(c).setStroke(c).draw(g);
 	}
 
+	public void shade(double maxDistance) {
+
+		double mappedVal = map(z_buffer, 0, maxDistance, 0, 1.0);
+		mappedVal = Math.abs(mappedVal - 1.0);
+
+		Color shadder = Color.rgb(255, 255, 255, mappedVal);
+
+		setFill(shadder);
+		setStroke(shadder);
+	}
+
+	private double map(double value, double v_min, double v_max, double min, double max) {
+		return (value - v_min) / (v_max - v_min) * (max - min) + min;
+	}
+
 	// Setters
 	public Triangle setStroke(Color c) {
 		stroke_color = c;
@@ -81,7 +96,7 @@ public class Triangle {
 		return this;
 	}
 
-	public Triangle setZBuffer(int number) {
+	public Triangle setZBuffer(double number) {
 		z_buffer = number;
 		return this;
 	}
@@ -114,7 +129,7 @@ public class Triangle {
 		return normal;
 	}
 
-	public int getZBuffer() {
+	public double getZBuffer() {
 		return z_buffer;
 	}
 

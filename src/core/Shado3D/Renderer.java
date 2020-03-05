@@ -30,11 +30,14 @@ public class Renderer {
 	private GraphicsContext g;
 	private Color background;
 
+
+	protected List<Camera> cameras;
 	private Vector camera; // Todo: Create a Camera class
 	private Matrix projectionMatrix;
 	private Matrix rotationMatrix;
 
 	private double furthest_point;
+	private double translation;
 
 	public Renderer(Canvas c) {
 		this.canvas = c;
@@ -44,12 +47,14 @@ public class Renderer {
 		rotation_Y = 0.0;
 		rotation_Z = 0.0;
 
+		cameras = new ArrayList<>();
 		camera = new Vector(0, 0, 0);
 		projectionMatrix = new Matrix(4, 4);
 		rotationMatrix = new Matrix(3, 3);
 		background = Color.WHITE;
 
 		furthest_point = 1000.0;
+		translation = 8.0;
 
 		this.initialize();
 	}
@@ -127,7 +132,7 @@ public class Renderer {
 				// Translate the triangle
 				Triangle triTranslated = new Triangle(triRotatedZX);
 				for (Vector v : triTranslated.vectors) {
-					v.z += 8.0;
+					v.z += translation;
 				}
 
 				Vector normal = triTranslated.getNormal();
@@ -149,6 +154,7 @@ public class Renderer {
 						v.y *= 0.5 * canvas.getHeight();
 					}
 					// Add to the Triangle to draw list
+					triProjected.setZBuffer(triTranslated.depth());
 					triangles_to_draw.add(triProjected);
 				}
 			}
@@ -167,9 +173,9 @@ public class Renderer {
 				// TODO: Illumination
 
 				// Draw the triangle with the appropiate color
-				tri.noFill().draw(g);
+				tri.shade(translation);
+				tri.draw(g);
 			}
-
 		}
 
 		// Clear the buffer
@@ -206,6 +212,9 @@ public class Renderer {
 	}
 
 	// Getters
+	private Camera defaultCamera() {
+		return cameras.stream().filter(Camera::isDefault).findFirst().orElse(null);
+	}
 
 	// Private stuff
 
