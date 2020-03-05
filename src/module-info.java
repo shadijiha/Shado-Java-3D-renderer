@@ -3,5 +3,5 @@ module JavaFX.test {
 	requires javafx.controls;
 	requires java.desktop;
 
-	opens renderer;
+	opens Testing;
 }

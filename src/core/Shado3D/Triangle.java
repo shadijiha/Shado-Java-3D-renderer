@@ -2,17 +2,15 @@
  *
  */
 
-package core;
+package core.Shado3D;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import renderer.Main;
 import shadoMath.Vector;
-import shadoMath.Vertex;
 
 public class Triangle {
 
-	public Vector[] vectors;
+	protected Vector[] vectors;
 
 	private Color stroke_color = Color.WHITE;
 	private Color fill_color = Color.WHITE;
@@ -60,28 +58,6 @@ public class Triangle {
 //		new Shado.Line(vectors[0].x, vectors[0].y, vectors[1].x, vectors[1].y).setFill(c).setStroke(c).draw(g);
 //		new Shado.Line(vectors[1].x, vectors[1].y, vectors[2].x, vectors[2].y).setFill(c).setStroke(c).draw(g);
 //		new Shado.Line(vectors[2].x, vectors[2].y, vectors[0].x, vectors[0].y).setFill(c).setStroke(c).draw(g);
-	}
-
-	public void shade() {
-
-		Vertex v1 = Main.camera.toVertex();
-		Vertex v2 = this.midPoint().toVertex();
-
-		int xd = (int) v1.getDistance(v2);
-
-		int mapped_value = map(xd,
-				0, 1000,
-				0, 255);
-
-		mapped_value = Math.abs(mapped_value - 255);
-
-		Color shadder = Color.rgb(mapped_value, mapped_value, mapped_value);
-		this.setFill(shadder);
-		this.setStroke(shadder);
-	}
-
-	private int map(int x, int in_min, int in_max, int out_min, int out_max) {
-		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
 
 	// Setters
