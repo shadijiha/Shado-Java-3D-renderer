@@ -29,10 +29,9 @@ public class Renderer {
 	private Canvas canvas;
 	private GraphicsContext g;
 	private Color background;
-
+	private final int RESOLUTION = 1;        // Draw 1 triangle each x (original resolution devided by x)
 
 	protected List<Camera> cameras;
-	private Vector camera; // Todo: Create a Camera class
 	private Matrix projectionMatrix;
 	private Matrix rotationMatrix;
 
@@ -48,13 +47,18 @@ public class Renderer {
 		rotation_Z = 0.0;
 
 		cameras = new ArrayList<>();
-		camera = new Vector(0, 0, 0);
+
+		Camera temp = new Camera(this);
+		temp.setAsDefault();
+
+		cameras.add(temp);
+
 		projectionMatrix = new Matrix(4, 4);
 		rotationMatrix = new Matrix(3, 3);
 		background = Color.WHITE;
 
 		furthest_point = 1000.0;
-		translation = 8.0;
+		translation = 8.8;
 
 		this.initialize();
 	}
@@ -93,6 +97,9 @@ public class Renderer {
 		rotationMatrix.setData(2, 2, cos(b) * cos(y));
 	}
 
+	/**
+	 * All the magic happens here
+	 */
 	public void render() {
 
 		long start_time = System.nanoTime();
@@ -105,14 +112,19 @@ public class Renderer {
 		//Matrix rotationY = Matrix.rotationY(rotation_Y);
 		Matrix rotationX = Matrix.rotationX(rotation_X);
 
+		Matrix result = rotationZ.multiply(rotationX);
+
 		updateRotationMatrix();
 
-		for (Object3D obj : render_buffer) {
+		render_buffer.parallelStream().forEach(obj -> {
 
 			ArrayList<Triangle> triangles_to_draw = new ArrayList<>();
 
 			// Draw triangles
-			for (var tri : obj.mesh.tris) {
+			//obj.mesh.tris.parallelStream().forEachOrdered(tri -> {
+			for (int t = 0; t < obj.mesh.tris.size(); t += RESOLUTION) {
+
+				Triangle tri = obj.mesh.tris.get(t);
 
 				Triangle triProjected = new Triangle();
 				Triangle triRotatedZ = new Triangle();
@@ -120,13 +132,13 @@ public class Renderer {
 				//Triangle triRotated = new Triangle();
 
 				// Rotate in Z
-				for (int i = 0; i < tri.vectors.length; i++) {
-					triRotatedZ.vectors[i] = multiplyMatrixVector(tri.vectors[i], rotationZ);
-				}
+//				for (int i = 0; i < tri.vectors.length; i++) {
+//					triRotatedZ.vectors[i] = multiplyMatrixVector(tri.vectors[i], rotationZ);
+//				}
 
 				// Rotate in X
 				for (int i = 0; i < triRotatedZX.vectors.length; i++) {
-					triRotatedZX.vectors[i] = multiplyMatrixVector(triRotatedZ.vectors[i], rotationX);
+					triRotatedZX.vectors[i] = multiplyMatrixVector(tri.vectors[i], result);
 				}
 
 				// Translate the triangle
@@ -139,7 +151,7 @@ public class Renderer {
 				normal.normalize();
 
 				// Only draw Visible triangles
-				if (normal.dotProduct(triTranslated.vectors[0].substract(camera)) < 0.0) {
+				if (normal.dotProduct(triTranslated.vectors[0].substract(defaultCamera().getPosition())) < 0.0) {
 					// Project the triangle (from 3D ----> 2D)
 					for (int i = 0; i < triTranslated.vectors.length; i++) {
 						triProjected.vectors[i] = multiplyMatrixVector(triTranslated.vectors[i], projectionMatrix);
@@ -158,25 +170,22 @@ public class Renderer {
 					triangles_to_draw.add(triProjected);
 				}
 			}
+			//);
 
 			// Sort the triangles from back to front
 			triangles_to_draw.sort((Triangle a, Triangle b) -> {
-
-				double mid_point_1 = (a.vectors[0].z + a.vectors[1].z + a.vectors[2].z) / 3.0;
-				double mid_point_2 = (b.vectors[0].z + b.vectors[1].z + b.vectors[2].z) / 3.0;
-
-				return (int) (mid_point_1 - mid_point_2);
+				return a.getZBuffer() < b.getZBuffer() ? 1 : -1;
 			});
 
-			for (var tri : triangles_to_draw) {
-
+			triangles_to_draw.parallelStream().forEachOrdered(tri -> {
 				// TODO: Illumination
 
 				// Draw the triangle with the appropiate color
-				tri.shade(translation);
+				//tri.shade(translation * 2);
+				//tri.noFill();
 				tri.draw(g);
-			}
-		}
+			});
+		});
 
 		// Clear the buffer
 		render_buffer.clear();

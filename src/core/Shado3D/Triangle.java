@@ -62,10 +62,10 @@ public class Triangle {
 
 	public void shade(double maxDistance) {
 
-		double mappedVal = map(z_buffer, 0, maxDistance, 0, 1.0);
-		mappedVal = Math.abs(mappedVal - 1.0);
+		int mappedVal = (int) map(z_buffer, 0, maxDistance, 0, 255);
+		mappedVal = Math.abs(mappedVal - 255);
 
-		Color shadder = Color.rgb(255, 255, 255, mappedVal);
+		Color shadder = Color.rgb(mappedVal, mappedVal, mappedVal);
 
 		setFill(shadder);
 		setStroke(shadder);

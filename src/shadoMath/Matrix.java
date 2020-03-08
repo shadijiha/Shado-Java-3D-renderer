@@ -243,7 +243,7 @@ public class Matrix {
 	 * @param other The matrix you want to multiply with the calling matrix
 	 * @return Returns the multiplying result of calling Matrix * other Matrix
 	 */
-	public Matrix multiply(final Matrix other) throws Exception {
+	public Matrix multiply(final Matrix other) {
 
 		if (this.cols == other.getRows() && this.rows == other.getCols()) {
 			Matrix result = new Matrix(this.rows, other.cols);
@@ -260,7 +260,8 @@ public class Matrix {
 
 			return result;
 		} else {
-			throw new Exception("Cannot multiply matrices where Acols != Brows && Arows != Bcols");
+			System.out.println("Cannot multiply matrices where Acols != Brows && Arows != Bcols");
+			return null;
 		}
 	}
 

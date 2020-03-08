@@ -7,25 +7,24 @@
 package core.Shado3D;
 
 import shadoMath.Vector;
-import shadoMath.Vertex;
 
 public class Camera {
 
-	private Vertex position;
+	private Vector position;
 	private Vector direction;
 	private Renderer renderer;
 
 	private boolean isDefault;
 
-	public Camera(Renderer renderer, Vertex pos, Vector direction) {
+	public Camera(Renderer renderer, Vector pos, Vector direction) {
 		this.renderer = renderer;
-		this.position = new Vertex(pos);
+		this.position = new Vector(pos);
 		this.direction = new Vector(direction);
 		this.isDefault = false;
 	}
 
 	public Camera(Renderer renderer) {
-		this(renderer, new Vertex(0, 0, 0), new Vector(0, 0, 1));
+		this(renderer, new Vector(0, 0, 0), new Vector(0, 0, 1));
 	}
 
 	// Setter
@@ -33,7 +32,7 @@ public class Camera {
 		// TODO:: implement
 	}
 
-	public void setPosition(Vertex p) {
+	public void setPosition(Vector p) {
 		position = p;
 	}
 
@@ -45,6 +44,14 @@ public class Camera {
 	// Getter
 	public boolean isDefault() {
 		return isDefault;
+	}
+
+	public Vector getPosition() {
+		return position;
+	}
+
+	public Vector getDirection() {
+		return direction;
 	}
 
 }

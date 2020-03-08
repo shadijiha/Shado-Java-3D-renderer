@@ -85,10 +85,25 @@ public class Object3D {
 					junk = line.charAt(0);
 					int[] indeces = new int[3];
 
-					// Match the faces with the appropriate vertex ID
-					indeces[0] = Integer.parseInt(elements[1]);
-					indeces[1] = Integer.parseInt(elements[2]);
-					indeces[2] = Integer.parseInt(elements[3]);
+					// If it has the normal vector data: e.g. "f v1//vn1 v2//vn2 v3//vn3"
+					if (line.contains("//")) {
+						// split all elements by "//"
+						int i = 0;
+						for (String e : elements) {
+							String[] temp_data = e.split("//");
+
+							if (temp_data[0].equals("f"))
+								continue;
+
+							indeces[i] = Integer.parseInt(temp_data[0]);
+							i++;
+						}
+					} else {
+						// Match the faces with the appropriate vertex ID
+						indeces[0] = Integer.parseInt(elements[1]);
+						indeces[1] = Integer.parseInt(elements[2]);
+						indeces[2] = Integer.parseInt(elements[3]);
+					}
 
 					// Add it to the mesh
 					tempmesh.add(new Triangle(verts.get(indeces[0] - 1), verts.get(indeces[1] - 1), verts.get(indeces[2] - 1)));

@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import logger.Logger;
 import shapes.Shado;
@@ -48,8 +49,13 @@ public class Main extends Application {
 		Renderer renderer = new Renderer(canvas);
 
 		// Create object
-		Object3D obj = Object3D.loadOBJ("src/DataFiles/teapot.obj");
-		Object3D obj2 = Object3D.loadOBJ("src/DataFiles/VideoShip.obj");
+		//Object3D obj = Object3D.loadOBJ("src/DataFiles/Fusepresquefinal.obj");
+		Object3D obj2 = Object3D.loadOBJ("src/DataFiles/tea.obj");
+
+		Sphere sphere = new Sphere(200);
+		sphere.setTranslateX(canvas.getWidth() / 2);
+		sphere.setTranslateY(canvas.getHeight() / 2);
+		root.getChildren().add(sphere);
 
 		new AnimationTimer() {
 			public void handle(long now) {
@@ -57,11 +63,12 @@ public class Main extends Application {
 				renderer.clear();
 
 				renderer.add(obj2);
+				//renderer.add(obj2);
 
 				// Render stuff
 				renderer.render();
 				renderer.rotateX(0.005);
-				renderer.rotateZ(0.01);
+				renderer.rotateZ(0.005);
 
 
 				// Calculate and display FPS
